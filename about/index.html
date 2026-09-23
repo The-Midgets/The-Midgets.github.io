@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Midgits - About</title>
+    <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@700&family=Patrick+Hand&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --blue: #00BFFF; --yellow: #FFD700; --pink: #FF69B4; --dark-text: #2c2c2c;
+            --paper-bg: #fcf9f2; --tape: rgba(255, 255, 255, 0.7); --margin-red: #ff9999;
+        }
+        body {
+            font-family: 'Patrick Hand', cursive, sans-serif;
+            background-color: var(--paper-bg);
+            /* Notebook lines + binder holes */
+            background-image: 
+                linear-gradient(#e5e5e5 1px, transparent 1px),
+                linear-gradient(90deg, #e5e5e5 1px, transparent 1px),
+                radial-gradient(circle at 30px 30px, #ddd 5px, transparent 6px),
+                radial-gradient(circle at 30px 100px, #ddd 5px, transparent 6px),
+                radial-gradient(circle at 30px 170px, #ddd 5px, transparent 6px);
+            background-size: 20px 20px, 20px 20px, 100% 140px, 100% 140px, 100% 140px;
+            color: var(--dark-text); margin: 0; padding: 0;
+            border-left: 60px solid var(--margin-red);
+        }
+
+        /* --- FIX FOUC --- */
+        nav a, h2, .intro-text, .character-card, .how-made-text {
+            opacity: 0;
+            visibility: hidden;
+        }
+
+        nav {
+            display: flex; justify-content: center; gap: 20px; padding: 25px 20px; flex-wrap: wrap;
+            position: sticky; top: 0; z-index: 100; background-color: var(--paper-bg); 
+            border-bottom: 3px dashed var(--dark-text);
+        }
+        nav a {
+            text-decoration: none; color: var(--dark-text); font-family: 'Caveat', cursive; font-size: 1.8rem;
+            font-weight: bold; background-color: var(--yellow); padding: 12px 25px; 
+            box-shadow: 4px 4px 0px var(--dark-text); border: 3px solid var(--dark-text); 
+            transition: transform 0.2s; transform: rotate(-1deg);
+        }
+        nav a:nth-child(even) { transform: rotate(2deg); background-color: var(--blue); }
+        nav a:hover { transform: scale(1.15) rotate(0deg); background-color: var(--pink); color: white; }
+
+        .container { max-width: 1000px; margin: 0 auto; padding: 20px; }
+
+        h2 {
+            font-family: 'Caveat', cursive; font-size: 3rem; color: var(--blue); text-align: center; margin-bottom: 30px;
+            background: white; display: inline-block; padding: 10px 30px; box-shadow: 3px 3px 0px var(--dark-text);
+            border: 2px solid var(--dark-text); transform: rotate(-1deg); clip-path: polygon(0% 0%, 100% 0%, 98% 100%, 2% 100%);
+        }
+
+        .intro-text {
+            font-size: 1.4rem; line-height: 1.6; text-align: center; max-width: 800px; margin: 0 auto 40px auto;
+            background: white; padding: 20px; border: 2px solid var(--dark-text); box-shadow: 4px 4px 0px var(--yellow);
+            transform: rotate(-0.5deg);
+        }
+
+        /* --- CHARACTER GRID --- */
+        .character-grid {
+            display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 30px;
+        }
+
+        .character-card {
+            background: white; padding: 15px; box-shadow: 5px 5px 15px rgba(0,0,0,0.15); border: 2px solid var(--dark-text);
+            position: relative; transition: transform 0.3s; transform: rotate(1deg); text-align: center;
+        }
+        .character-card:nth-child(even) { transform: rotate(-2deg); }
+        .character-card:hover { transform: scale(1.05) rotate(0deg); z-index: 10; }
+        .character-card::before {
+            content: ''; position: absolute; top: -10px; left: 50%; transform: translateX(-50%) rotate(-2deg);
+            width: 80px; height: 25px; background-color: var(--tape); border: 1px solid rgba(0,0,0,0.1); box-shadow: 0px 2px 4px rgba(0,0,0,0.1); z-index: 2;
+        }
+
+        .character-card img { width: 100%; height: 200px; object-fit: cover; background-color: #eee; border: 2px solid var(--dark-text); margin-bottom: 10px; }
+        .character-info h3 { margin: 0 0 5px 0; font-family: 'Caveat', cursive; font-size: 2rem; color: var(--pink); }
+        .character-info p { margin: 0; font-size: 1.1rem; color: #555; }
+
+        /* --- HOW MADE SECTION --- */
+        .how-made-text {
+            background: white; padding: 25px; border: 2px solid var(--dark-text); box-shadow: 6px 6px 0px var(--blue);
+            font-size: 1.3rem; line-height: 1.6; transform: rotate(0.5deg); margin-top: 40px;
+        }
+        .how-made-text strong { font-family: 'Caveat', cursive; font-size: 1.5rem; color: var(--pink); }
+
+        .notebook-link {
+            color: var(--blue);
+            font-family: 'Caveat', cursive;
+            font-size: 1.4rem;
+            font-weight: bold;
+            text-decoration: none;
+            border-bottom: 3px solid var(--yellow);
+            padding-bottom: 2px;
+            transition: all 0.2s ease;
+            cursor: pointer;
+        }
+
+        .notebook-link:hover {
+            color: var(--pink);
+            border-bottom-color: var(--pink);
+            transform: translateY(-2px);
+            text-shadow: 2px 2px 0px var(--yellow);
+        }
+
+        .notebook-link:active {
+            transform: translateY(0);
+        }
+
+        footer {
+            text-align: center; padding: 30px; background-color: var(--yellow); border-top: 3px dashed var(--dark-text);
+            font-family: 'Caveat', cursive; font-size: 1.5rem; color: var(--dark-text); margin-top: 50px;
+        }
+        footer p { margin: 5px 0; }
+        .paw-print { font-size: 1.2rem; color: var(--pink); }
+    </style>
+</head>
+<body>
+    <nav>
+        <a href="../">Home</a>
+        <a href="season-1/">Season 1</a>
+        <a href="#">About</a>
+        <!-- <a href="season-2/index.html">Season 2</a>
+        <a href="season-3/index.html">Season 3</a>
+        <a href="season-4/index.html">Season 4</a> -->
+    </nav>
+    <div class="container">
+        <div style="text-align: center;">
+            <h2>About The Midgits</h2>
+        </div>
+
+        <div class="intro-text">
+            <p>Welcome to the chaotic, comical world of <strong>The Midgits</strong>! We are a cartoon about a hilarious band, their bossy, upright pig, Pansy, and a dog named Nacho who just wants so nap all day, we bring you music, mayhem, and a lot of funny piano sounds.</p>
+        </div>
+
+        <div style="text-align: center;">
+            <h2>Meet the Band</h2>
+        </div>
+
+        <div class="character-grid">
+            <!-- MAX -->
+            <div class="character-card">
+                <img src="https://via.placeholder.com/280x200/00BFFF/FFFFFF?text=Max" alt="Max">
+                <div class="character-info">
+                    <h3>Max</h3>
+                    <p><strong>Accordion & Leader</strong><br>Gets curious, causes chaos, and squeezes the accordion until it wheezes.</p>
+                </div>
+            </div>
+            <!-- PENNY -->
+            <div class="character-card">
+                <img src="https://via.placeholder.com/280x200/FF69B4/FFFFFF?text=Penny" alt="Penny">
+                <div class="character-info">
+                    <h3>Penny</h3>
+                    <p><strong>Recorder</strong><br>Her recorder squeaks so loud it usually makes Nacho howl.</p>
+                </div>
+            </div>
+            <!-- PETUNIA -->
+            <div class="character-card">
+                <img src="https://via.placeholder.com/280x200/FFD700/000000?text=Petunia" alt="Petunia">
+                <div class="character-info">
+                    <h3>Petunia</h3>
+                    <p><strong>Drums</strong><br>Wild, loud, and always ready to start a cartoon fight.</p>
+                </div>
+            </div>
+            <!-- PANSY -->
+            <div class="character-card">
+                <img src="https://via.placeholder.com/280x200/FF69B4/FFFFFF?text=Pansy" alt="Pansy">
+                <div class="character-info">
+                    <h3>Pansy</h3>
+                    <p><strong>Piano & Manager</strong><br>The upright pig who trys to keep the band on track (and plays the funny piano).</p>
+                </div>
+            </div>
+            <!-- NACHO -->
+            <div class="character-card">
+                <img src="https://via.placeholder.com/280x200/2c2c2c/FFFFFF?text=Nacho" alt="Nacho">
+                <div class="character-info">
+                    <h3>Nacho</h3>
+                    <p><strong>The Dog</strong><br>Doesn't talk, just howls in tune, chases runaway sounds, and rolls his eyes at the camera.</p>
+                </div>
+            </div>
+        </div>
+
+        <div style="text-align: center; margin-top: 50px;">
+            <h2>How It's Made</h2>
+        </div>
+
+        <div class="how-made-text">
+            <p><strong>Animation:</strong> Everything is modeled and animated in Blender.</p>
+            <p><strong>Music:</strong> The soundtrack is recorded using a real accordion, recorder, piano, and drums. Yes, the funny piano sound is real!</p>
+            <p><strong>The Team:</strong> Website and animation done by <a href="https://github.com/Austin-ADev" target="_blank" rel="noopener noreferrer" class="notebook-link">Austin ADev</a>, Chief art designer: Sam, </p>
+        </div>
+    </div>
+
+    <footer>
+        <p>&copy; 2026 The Migits. All rights reserved.</p>
+        <p class="paw-print">🐾 Nacho was here 🐾</p>
+    </footer>
+
+    <!-- GSAP LIBRARY -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+    <script>
+        window.addEventListener('load', () => {
+            const tl = gsap.timeline({ defaults: { ease: "back.out(1.7)" } });
+            
+            // 1. Nav pops in
+            tl.fromTo("nav a", 
+                { y: -100, autoAlpha: 0 }, 
+                { duration: 0.6, y: 0, autoAlpha: 1, stagger: 0.1 }
+            )
+            // 2. Title drops in
+            .fromTo("h2", 
+                { y: -50, autoAlpha: 0 }, 
+                { duration: 0.8, y: 0, autoAlpha: 1, stagger: 0.2 }, "-=0.3"
+            )
+            // 3. Intro text fades up
+            .fromTo(".intro-text", 
+                { y: 30, autoAlpha: 0 }, 
+                { duration: 0.6, y: 0, autoAlpha: 1 }, "-=0.4"
+            )
+            // 4. Character cards pop in one by one
+            .fromTo(".character-card", 
+                { y: 80, autoAlpha: 0 }, 
+                { duration: 0.8, y: 0, autoAlpha: 1, stagger: 0.2, ease: "elastic.out(1, 0.5)" }, "-=0.2"
+            )
+            // 5. How made text fades in
+            .fromTo(".how-made-text", 
+                { y: 30, autoAlpha: 0 }, 
+                { duration: 0.6, y: 0, autoAlpha: 1 }, "-=0.3"
+            );
+        });
+    </script>
+</body>
+</html>
