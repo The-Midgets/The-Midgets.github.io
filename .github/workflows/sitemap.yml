@@ -4,6 +4,9 @@ on:
   push:
     branches: [ main ]
 
+permissions:
+  contents: write
+
 jobs:
   sitemap_job:
     runs-on: ubuntu-latest
@@ -19,7 +22,7 @@ jobs:
       id: sitemap
       uses: cicirello/generate-sitemap@v1.10.4
       with:
-        base-url-path: https://YOUR-USERNAME.github.io/
+        base-url-path: https://The-Midgets.github.io/
 
     - name: Commit and push
       run: |
