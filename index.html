@@ -72,6 +72,34 @@
         .video-container { position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; border: 2px solid var(--dark-text); background-color: black; }
         .video-container video { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: contain; }
 
+        .player-controls {
+            display: flex; align-items: center; gap: 15px; background: white; padding: 15px;
+            border: 2px solid var(--dark-text); margin-top: 15px; box-shadow: 3px 3px 0px var(--dark-text); border-radius: 5px;
+        }
+        .player-btn {
+            background: var(--yellow); border: 2px solid var(--dark-text); font-family: 'Caveat', cursive;
+            font-size: 1.3rem; padding: 5px 15px; cursor: pointer; box-shadow: 2px 2px 0px var(--dark-text);
+            transition: all 0.1s; border-radius: 4px; color: var(--dark-text); font-weight: bold;
+        }
+        .player-btn:hover { background: var(--pink); color: white; }
+        .seek-bar {
+            flex-grow: 1; -webkit-appearance: none; height: 12px; background: #eee;
+            border: 2px solid var(--dark-text); outline: none; cursor: pointer; border-radius: 6px;
+        }
+        .seek-bar::-webkit-slider-thumb {
+            -webkit-appearance: none; appearance: none; width: 20px; height: 20px;
+            background: var(--blue); border: 2px solid var(--dark-text); cursor: pointer; border-radius: 50%;
+        }
+        .time-display {
+            font-family: 'Patrick Hand', cursive; font-size: 1.2rem; white-space: nowrap; min-width: 90px; text-align: center;
+        }
+        .back-btn {
+            display: inline-block; margin-top: 20px; text-decoration: none; color: var(--dark-text);
+            font-family: 'Caveat', cursive; font-size: 1.5rem; background: var(--yellow); padding: 8px 20px;
+            border: 2px solid var(--dark-text); box-shadow: 3px 3px 0px var(--dark-text); transition: transform 0.2s; transform: rotate(-1deg);
+        }
+        .back-btn:hover { transform: scale(1.1) rotate(0deg); background: var(--pink); color: white; }
+        
         footer {
             text-align: center; padding: 30px; background-color: var(--yellow); border-top: 3px dashed var(--dark-text);
             font-family: 'Caveat', cursive; font-size: 1.5rem; color: var(--dark-text); margin-top: 50px;
@@ -102,6 +130,11 @@
                     <source src="season-1/ep-1/ep-1.mp4" type="video/mp4">
                     Your browser does not support the video tag.
                 </video>
+            </div>
+            <div class="player-controls" id="player-controls">
+                <button id="playPauseBtn" class="player-btn">▶ Play</button>
+                <input type="range" id="seekBar" class="seek-bar" value="0" min="0" max="100">
+                <span id="timeDisplay" class="time-display">0:00 / 0:00</span>
             </div>
         </div>
         <div style="text-align: center; font-size: 1.5rem;" id="video-info">
@@ -140,6 +173,50 @@
                 { y: 20, autoAlpha: 0 }, 
                 { duration: 0.8, y: 0, autoAlpha: 1 }, "-=0.5");
         });
+        // --- VIDEO PLAYER LOGIC ---
+        const video = document.getElementById('epVideo');
+        const playPauseBtn = document.getElementById('playPauseBtn');
+        const seekBar = document.getElementById('seekBar');
+        const timeDisplay = document.getElementById('timeDisplay');
+
+        function togglePlay() {
+            if (video.paused) {
+                video.play();
+                playPauseBtn.textContent = '⏸ Pause';
+                gsap.fromTo(playPauseBtn, {scale: 0.8}, {scale: 1, duration: 0.2, ease: "back.out(2)"});
+            } else {
+                video.pause();
+                playPauseBtn.textContent = '▶ Play';
+                gsap.fromTo(playPauseBtn, {scale: 0.8}, {scale: 1, duration: 0.2, ease: "back.out(2)"});
+            }
+        }
+        playPauseBtn.addEventListener('click', togglePlay);
+
+        video.addEventListener('timeupdate', () => {
+            const percent = (video.currentTime / video.duration) * 100;
+            seekBar.value = percent;
+            const current = formatTime(video.currentTime);
+            const total = formatTime(video.duration);
+            timeDisplay.textContent = `${current} / ${total}`;
+        });
+
+        seekBar.addEventListener('input', () => {
+            const time = (seekBar.value / 100) * video.duration;
+            video.currentTime = time;
+        });
+
+        video.addEventListener('ended', () => {
+            playPauseBtn.textContent = '▶ Play';
+            seekBar.value = 0;
+            gsap.fromTo(playPauseBtn, {scale: 0.8}, {scale: 1, duration: 0.3, ease: "bounce.out"});
+        });
+
+        function formatTime(seconds) {
+            if (isNaN(seconds)) return "0:00";
+            const m = Math.floor(seconds / 60);
+            const s = Math.floor(seconds % 60);
+            return `${m}:${s < 10 ? '0' : ''}${s}`;
+        }
     </script>
 </body>
 </html>
