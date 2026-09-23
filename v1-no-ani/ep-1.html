@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Migits - Episode 1</title>
+    <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@700&family=Patrick+Hand&display=swap" rel="stylesheet">
+    <style>
+        /* --- ALL DESIGN IS IN HERE --- */
+        :root {
+            --blue: #00BFFF;
+            --yellow: #FFD700;
+            --pink: #FF69B4;
+            --dark-text: #2c2c2c;
+            --paper-bg: #fcf9f2;
+            --tape: rgba(255, 255, 255, 0.6);
+            --margin-red: #ff9999;
+        }
+        body {
+            font-family: 'Patrick Hand', cursive, sans-serif;
+            background-color: var(--paper-bg);
+            background-image: 
+                linear-gradient(#e5e5e5 1px, transparent 1px),
+                linear-gradient(90deg, #e5e5e5 1px, transparent 1px);
+            background-size: 20px 20px;
+            color: var(--dark-text);
+            margin: 0;
+            padding: 0;
+            border-left: 60px solid var(--margin-red);
+        }
+        nav {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            padding: 20px;
+            flex-wrap: wrap;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background-color: var(--paper-bg);
+            border-bottom: 3px dashed var(--dark-text);
+        }
+        nav a {
+            text-decoration: none;
+            color: var(--dark-text);
+            font-family: 'Caveat', cursive;
+            font-size: 1.5rem;
+            font-weight: bold;
+            background-color: var(--yellow);
+            padding: 10px 20px;
+            box-shadow: 3px 3px 0px var(--dark-text);
+            border: 2px solid var(--dark-text);
+            transition: transform 0.2s;
+            transform: rotate(-1deg);
+        }
+        nav a:nth-child(even) { transform: rotate(2deg); background-color: var(--blue); }
+        nav a:hover { transform: scale(1.1) rotate(0deg); background-color: var(--pink); color: white; }
+        
+        .container { max-width: 1000px; margin: 0 auto; padding: 20px; }
+        
+        h2 {
+            font-family: 'Caveat', cursive;
+            font-size: 3rem;
+            color: var(--blue);
+            text-align: center;
+            margin-bottom: 30px;
+            background: white;
+            display: inline-block;
+            padding: 10px 30px;
+            box-shadow: 3px 3px 0px var(--dark-text);
+            border: 2px solid var(--dark-text);
+            transform: rotate(-1deg);
+            clip-path: polygon(0% 0%, 100% 0%, 98% 100%, 2% 100%);
+        }
+
+        /* --- THE CUSTOM VIDEO PLAYER --- */
+        .video-wrapper {
+            background: white;
+            padding: 20px;
+            border: 3px solid var(--dark-text);
+            box-shadow: 8px 8px 0px var(--blue);
+            position: relative;
+            margin-bottom: 40px;
+            transform: rotate(0.5deg);
+        }
+        .video-wrapper::before, .video-wrapper::after {
+            content: ''; position: absolute; width: 100px; height: 30px; background-color: var(--tape); border: 1px solid rgba(0,0,0,0.1); box-shadow: 0px 2px 4px rgba(0,0,0,0.1);
+        }
+        .video-wrapper::before { top: -15px; left: -30px; transform: rotate(-45deg); }
+        .video-wrapper::after { bottom: -15px; right: -30px; transform: rotate(-45deg); }
+
+        .video-container { position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; border: 2px solid var(--dark-text); background-color: black; }
+        .video-container video { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: contain; }
+
+        /* Custom Controls */
+        .player-controls {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            background: white;
+            padding: 15px;
+            border: 2px solid var(--dark-text);
+            margin-top: 15px;
+            box-shadow: 3px 3px 0px var(--dark-text);
+            border-radius: 5px;
+        }
+        .player-btn {
+            background: var(--yellow);
+            border: 2px solid var(--dark-text);
+            font-family: 'Caveat', cursive;
+            font-size: 1.3rem;
+            padding: 5px 15px;
+            cursor: pointer;
+            box-shadow: 2px 2px 0px var(--dark-text);
+            transition: all 0.1s;
+            border-radius: 4px;
+            color: var(--dark-text);
+        }
+        .player-btn:active {
+            transform: translate(2px, 2px);
+            box-shadow: 0px 0px 0px var(--dark-text);
+        }
+        .player-btn:hover {
+            background: var(--pink);
+            color: white;
+        }
+        .seek-bar {
+            flex-grow: 1;
+            -webkit-appearance: none;
+            height: 12px;
+            background: #eee;
+            border: 2px solid var(--dark-text);
+            outline: none;
+            cursor: pointer;
+            border-radius: 6px;
+        }
+        .seek-bar::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 20px;
+            height: 20px;
+            background: var(--blue);
+            border: 2px solid var(--dark-text);
+            cursor: pointer;
+            border-radius: 50%;
+        }
+        .time-display {
+            font-family: 'Patrick Hand', cursive;
+            font-size: 1.2rem;
+            white-space: nowrap;
+            min-width: 90px;
+            text-align: center;
+        }
+
+        /* Back Button */
+        .back-btn {
+            display: inline-block;
+            margin-top: 20px;
+            text-decoration: none;
+            color: var(--dark-text);
+            font-family: 'Caveat', cursive;
+            font-size: 1.5rem;
+            background: var(--yellow);
+            padding: 8px 20px;
+            border: 2px solid var(--dark-text);
+            box-shadow: 3px 3px 0px var(--dark-text);
+            transition: transform 0.2s;
+            transform: rotate(-1deg);
+        }
+        .back-btn:hover {
+            transform: scale(1.1) rotate(0deg);
+            background: var(--pink);
+            color: white;
+        }
+
+        footer {
+            text-align: center;
+            padding: 30px;
+            background-color: var(--yellow);
+            border-top: 3px dashed var(--dark-text);
+            font-family: 'Caveat', cursive;
+            font-size: 1.5rem;
+            color: var(--dark-text);
+            margin-top: 50px;
+        }
+        footer p { margin: 5px 0; }
+        .paw-print { font-size: 1.2rem; color: var(--pink); }
+    </style>
+</head>
+<body>
+    <nav>
+        <a href="index.html">Home</a>
+        <a href="season1.html">Season 1</a>
+        <a href="season2.html">Season 2</a>
+        <a href="season3.html">Season 3</a>
+        <a href="season4.html">Season 4</a>
+    </nav>
+    
+    <div class="container">
+        <div style="text-align: center;">
+            <h2>Episode 1: The Migits</h2>
+        </div>
+
+        <div class="video-wrapper">
+            <div class="video-container">
+                <!-- REPLACE "episode1.mp4" WITH YOUR ACTUAL VIDEO FILE NAME -->
+                <video id="epVideo">
+                    <source src="episode1.mp4" type="video/mp4">
+                    Your browser does not support the video tag.
+                </video>
+            </div>
+            
+            <!-- CUSTOM CONTROLS -->
+            <div class="player-controls">
+                <button id="playPauseBtn" class="player-btn">▶ Play</button>
+                <input type="range" id="seekBar" class="seek-bar" value="0" min="0" max="100">
+                <span id="timeDisplay" class="time-display">0:00 / 0:00</span>
+            </div>
+        </div>
+
+        <div style="text-align: center; font-size: 1.5rem;">
+            <p>Watch how Max, Penny, Petunia, Pansy, and Nacho first met and formed the band!</p>
+            <a href="season1.html" class="back-btn">← Back to Season 1</a>
+        </div>
+    </div>
+
+    <footer>
+        <p>&copy; 2024 The Migits. Made by Max, Sam, Hux, and Har.</p>
+        <p class="paw-print">🐾 Nacho was here 🐾</p>
+    </footer>
+
+    <!-- JAVASCRIPT FOR THE CUSTOM PLAYER -->
+    <script>
+        const video = document.getElementById('epVideo');
+        const playPauseBtn = document.getElementById('playPauseBtn');
+        const seekBar = document.getElementById('seekBar');
+        const timeDisplay = document.getElementById('timeDisplay');
+
+        // Play / Pause
+        function togglePlay() {
+            if (video.paused) {
+                video.play();
+                playPauseBtn.textContent = '⏸ Pause';
+            } else {
+                video.pause();
+                playPauseBtn.textContent = '▶ Play';
+            }
+        }
+        playPauseBtn.addEventListener('click', togglePlay);
+
+        // Update Seek Bar and Time Display
+        video.addEventListener('timeupdate', () => {
+            const percent = (video.currentTime / video.duration) * 100;
+            seekBar.value = percent;
+            
+            const current = formatTime(video.currentTime);
+            const total = formatTime(video.duration);
+            timeDisplay.textContent = `${current} / ${total}`;
+        });
+
+        // Scrub the video when the user drags the bar
+        seekBar.addEventListener('input', () => {
+            const time = (seekBar.value / 100) * video.duration;
+            video.currentTime = time;
+        });
+
+        // Reset button when video ends
+        video.addEventListener('ended', () => {
+            playPauseBtn.textContent = '▶ Play';
+            seekBar.value = 0;
+        });
+
+        // Helper to format time (e.g., 1:05)
+        function formatTime(seconds) {
+            if (isNaN(seconds)) return "0:00";
+            const m = Math.floor(seconds / 60);
+            const s = Math.floor(seconds % 60);
+            return `${m}:${s < 10 ? '0' : ''}${s}`;
+        }
+    </script>
+</body>
+</html>
